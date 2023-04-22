@@ -1,4 +1,6 @@
-
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,7 +65,7 @@
               <ul class="dropdown-menu dropdown-menu-end" style="background-color: #064663;">
                 <li class="dropdown-header text-white">
                   <span class="me-2"><i class="bi bi-person-circle"></i></span>
-                  Welcome !
+                  Welcome <?php echo $_SESSION['username']; ?> !
                 </li>
                 <li>
                   <a class="dropdown-item text-white" href="./update_acc.php">
@@ -92,10 +94,10 @@
     <script src="../js/dataTables.bootstrap5.min.js"></script>
     <script src="../js/script.js"></script>
 
-    <script>
+    <!-- <script>
       change(){
         style="color: black;";
       }
-    </script>
+    </script> -->
 </body>
 </html>

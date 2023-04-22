@@ -46,7 +46,11 @@
                 </h1>
             </div>
             <div class="body">
-                <form class="px-4 py-3" method="post" action="register.php">
+                <form class="px-4 py-3" method="post">
+                    <div class="mb-3">
+                        <label for="userid" class="form-label">User ID</label>
+                        <input type="text" class="form-control" name="userid" id="username" placeholder="Enter User ID" required>
+                    </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
@@ -61,11 +65,9 @@
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" name="register" class="btn btn text-white mb-2" style="background-color: #064663;">Create Account</button>
-                        <a class="btn mt-2 text-white text-center" href="./index.php">Already had an account? Login instead.</a>
+                        <a class="btn mt-2 text-white text-center" href="index.php">Already had an account? Login instead.</a>
                     </div>
                 </form>
-
-                
             </div>
         </div>
     </div>

@@ -1,11 +1,12 @@
 <?php 
-if (isset($_SESSION['username']))
-{
-}
-else
-{
-    header('Location: ../index.php');
-}
+session_start();
+// if (isset($_SESSION['username']))
+// {
+// }
+// else
+// {
+//     header('Location: ../index.php');
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,10 +101,10 @@ else
     <script src="../js/dataTables.bootstrap5.min.js"></script>
     <script src="../js/script.js"></script>
 
-    <script>
+    <!-- <script>
       change(){
         style="color: black;";
       }
-    </script>
+    </script> -->
 </body>
 </html>

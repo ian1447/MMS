@@ -1,3 +1,6 @@
+<?php 
+include "../dbcon.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,9 +14,9 @@
 <body class="fixed-left">
 
   <!-- Top Bar Start -->
-  <?php include('./includes/navbar.php'); ?>
+  <?php include('includes/navbar.php'); ?>
   <!-- ========== Left Sidebar Start ========== -->
-  <?php include('./includes/sidebar.php'); ?>
+  <?php include('includes/sidebar.php'); ?>
   <!-- Left Sidebar End -->
 
   <main class="mt-5 pt-3 px-4">
@@ -45,7 +48,7 @@
                           </div>
                           <div class="modal-body">
 
-                            <form class="needs-validation" method="POST">
+                            <form class="needs-validation" method="POST" enctype="multipart/form-data">
                               <div class="form-row">
                                 <div class="col-md-12 mb-2">
                                   <label for="validationCustom01">Memo Name:</label>
@@ -56,7 +59,7 @@
                                 </div>
                                 <div class="col-md-12 mb-2">
                                   <label for="validationCustom01">Select a file:</label>
-                                  <input type="file" class="form-control" id="" name="file" accept=".jpg,.jpeg,.png" required>
+                                  <input type="file" class="form-control" id="" name="image" value="" accept=".jpg,.jpeg,.png" required>
                                   <div class="valid-feedback">
                                     Looks good!
                                   </div>
@@ -65,8 +68,42 @@
                               <div class="modal-footer">
                                 <input type="reset" class="btn btn-secondary">
                                 <button class="btn btn-primary">Upload</button>
-                              </div>
+                              </div>  
                             </form>
+                            <?php
+                            if (isset($_POST['memo_name']))
+                            {
+                              if(!empty($_FILES["image"]["name"]))
+                              {
+                                $fileName = basename($_FILES["image"]["name"]); 
+                                $fileType = pathinfo($fileName, PATHINFO_EXTENSION); 
+                                
+                                // Allow certain file formats 
+                                $allowTypes = array('jpg','png','jpeg','gif'); 
+                                if(in_array($fileType, $allowTypes))
+                                { 
+                                  $image = $_FILES['image']['tmp_name']; 
+                                  $imgContent = addslashes(file_get_contents($image)); 
+                              
+                                  $insert = $conn->query("INSERT into `memos` (memo_title,`image`) VALUES ('".$_POST['memo_name']."','$imgContent')"); 
+                                  if($insert)
+                                  { 
+                                    echo "<script>window.location.href='memo.php'</script>";
+                                  }else
+                                  { 
+                                    echo "<script>
+                                        alert('Failed');
+                                        window.location.href='memo.php';
+                                        </script>";
+                                  }  
+                                }
+                              }
+                              else{
+                                echo '<script>alert("No image data!") 
+                                window.location.href="memo.php"</script>';
+                              }
+                            }
+                            ?>
 
                           </div>
                         </div>
@@ -84,25 +121,30 @@
                     </tr>
                   </thead>
                   <tbody style="cursor: pointer" id="myBtn">
+                    <?php
+                      $sql = "SELECT id,memo_title, DATE(date_created) as date_created, is_signed, forwarded_to FROM `memos`;";
+                      $actresult = mysqli_query($conn, $sql);
 
+                      while ($result = mysqli_fetch_assoc($actresult)) {
+                      ?>
                     <tr>
                       <td>
-                        Potangina Mo
+                        <?php echo $result['memo_title']; ?>
                       </td>
                       <td>
-                        04/13/2023
+                        <?php echo $result['date_created']; ?>
                       </td>
                       <td>
-                        Y
+                        <?php echo $result['is_signed']; ?>
                       </td>
                       <td>
-                        Max da Dog
+                        <?php echo $result['forwarded_to']; ?>
                       </td>
                       <td>
                         <div class="d-grid gap-2 d-md-flex">
-                          <a href="#edit" data-toggle="modal" class="btn btn-primary btn-sm me-md-2"><span
+                          <a href="#edit<?php echo $result['id']; ?>" data-toggle="modal" class="btn btn-primary btn-sm me-md-2"><span
                               class="me-2"><i class="bi bi-folder2-open"></i></span> View Memo</a> ||
-                          <a href="#del" data-toggle="modal" class="btn btn-danger btn-sm"><span
+                          <a href="#del<?php echo $result['id']; ?>" data-toggle="modal" class="btn btn-danger btn-sm"><span
                               class="me-2"><i class="bi bi-trash"></i></span> Delete
                           </a>
                         </div>
@@ -133,7 +175,7 @@
                     <!-- End of Edit Modal -->
 
                     <!-- Modal to display the memo image -->
-                    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="memoModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="edit<?php echo $result['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="memoModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -152,8 +194,16 @@
                                     </button>
                                 </div>
                                 <div class="modal-body text-center">
+                                  <?php
+                                    $id = $result['id'];
+                                    $edit = mysqli_query($conn, "select * from memos where id='" . $result['id'] . "'");
+                                    $erow = mysqli_fetch_array($edit);
+                                    echo '<div>
+                                    <img src="data:image/jpeg;base64,'.base64_encode($erow['image'] ).'" id="memoImage" class="img-fluid" />';
+                                    echo "</div>";
+                                  ?>
                                     <!-- Image element -->
-                                    <img src="https://www.iwriteessays.com/images/cms/Memo%20Examples%20To%20Students.png" id="memoImage" class="img-fluid">
+                                    <!-- <img src="https://www.iwriteessays.com/images/cms/Memo%20Examples%20To%20Students.png" id="memoImage" class="img-fluid"> -->
                                 </div>
                                 <div class="modal-footer">
                                   <input type="hidden" value="2" name="type">
@@ -166,7 +216,7 @@
 
 
                     <!-- Delete -->
-                    <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    <div class="modal fade" id="del<?php echo $result['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                       aria-hidden="true">
                       <div class="modal-dialog">
                         <div class="modal-content">
@@ -177,30 +227,44 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                           </div>
                           <div class="modal-body">
-
+                            <?php
+                              $del = mysqli_query($conn, "select * from memos where id='" . $result['id'] . "'");
+                              $drow = mysqli_fetch_array($del);
+                            ?>
                             <div class="container-fluid">
                               <h5>
                                 <center>Are you sure to delete <strong>
-
-                                  </strong> from Faculty list? This method cannot be undone.</center>
+                                  <?php echo ucwords($drow['memo_title']); ?>
+                                  </strong> from Memo list? This method cannot be undone.</center>
                               </h5>
                             </div>
                           </div>
                           <form method="POST">
-                            <input type="hidden" id="id_u" name="deleteid" value="" class="form-control" required>
+                            <input type="hidden" id="id_u" name="deleteid" value="<?php echo $drow['id']; ?>" class="form-control" required>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal"><span
                                   class="glyphicon glyphicon-remove"></span> Cancel</button>
                               <button class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>
                                 Delete</button>
                             </div>
-
+                            <?php
+                              if (isset($_POST['deleteid'])) {
+                                $sql = "DELETE FROM memos WHERE id='" . $_POST['deleteid'] . "'";
+                                if ($conn->query($sql) === TRUE) {
+                                  echo '<script>alert("Deleted Successfully!") 
+                                                window.location.href="memo.php"</script>';
+                                } else {
+                                  echo '<script>alert("Deleting Memo Details Failed!\n Please Check SQL Connection String!") 
+                                                window.location.href="memo.php"</script>';
+                                }
+                              }
+                            ?>
                           </form>
                         </div>
                       </div>
                     </div>
                     <!-- /.modal -->
-
+                    <?php } ?>
                   </tbody>
                   <tfoot></tfoot>
                 </table>

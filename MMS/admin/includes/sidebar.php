@@ -42,7 +42,7 @@
               </div>
             </li>
             <li>
-              <a href="memo.php" class="nav-link px-3">
+              <a href="./memo.php" class="nav-link px-3">
                 <span class="me-2"><i class="bi bi-chat-right-text"></i></span>
                 <span>Create Memo</span>
               </a>
@@ -55,7 +55,7 @@
               </div>
             </li>
             <li>
-              <a href="users.php" class="nav-link px-3">
+              <a href="./users.php" class="nav-link px-3">
                 <span class="me-2"><i class="bi bi-person-plus-fill"></i></span>
                 <span>Users</span>
               </a>

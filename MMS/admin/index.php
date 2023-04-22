@@ -42,7 +42,7 @@ include "../dbcon.php";
                             <div class="card-body">
                                 <h5 class="card-title">Memo Created</h5>
                                 <h1 class="card-text fw-bold">3</h1>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@ include "../dbcon.php";
                             <div class="card-body">
                                 <h5 class="card-title">Signed Memo</h5>
                                 <h1 class="card-text fw-bold">6</h1>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@ include "../dbcon.php";
                             <div class="card-body">
                                 <h5 class="card-title">Users</h5>
                                 <h1 class="card-text fw-bold">9</h1>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
                             </div>
                         </div>
                     </div>
